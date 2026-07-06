@@ -1,0 +1,10 @@
+services:
+# some services
+
+volumes:
+# volumes
+
+networks:
+  default:
+  proxy:
+    external: true

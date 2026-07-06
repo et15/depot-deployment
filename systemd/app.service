@@ -1,0 +1,20 @@
+[Unit]
+Description=<APP NAME>
+Requires=docker.service
+After=docker.service
+
+[Service]
+User=<USER>
+Group=<GROUP>
+TimeoutStopSec=15
+Restart=unless-stopped
+
+WorkingDirectory=/opt/<app_path>
+EnvironmentFile=/etc/default/sops
+
+ExecStart=/opt/<app_path>/bin/up.sh
+ExecReload=/opt/<app_path>/bin/up.sh
+ExecStop=/usr/bin/docker compose -f docker-compose.yaml down --remove-orphans
+
+[Install]
+WantedBy=multi-user.target
