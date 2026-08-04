@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-export
-
 SCRIPT=$(readlink -f -- "${BASH_SOURCE[0]}")
 PROJECTDIR="${SCRIPT%/*/*}"
+
+export SOPS_AGE_KEY_FILE=/var/sops/age/keys.txt
 
 envfiles="$PROJECTDIR/envfiles"
 # Check if envfiles file exists
