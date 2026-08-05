@@ -7,7 +7,15 @@ After=docker.service
 User=<USER>
 Group=<GROUP>
 TimeoutStopSec=15
-Restart=unless-stopped
+Type=oneshot
+RemainAfterExit=yes
+Restart=on-failure
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/<app_path>
 
 WorkingDirectory=/opt/<app_path>
 EnvironmentFile=/etc/default/sops
