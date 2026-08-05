@@ -21,7 +21,7 @@ fi
 cleanup() {
     rm -f "${tmpfiles[@]}" "${symlinks[@]}" 2>/dev/null
 }
-trap cleanup EXIT
+trap cleanup EXIT TERM INT
 
 declare -a tmpfiles=()
 declare -a symlinks=()
@@ -29,7 +29,7 @@ declare -a symlinks=()
 # Read envfiles from file (one per line)
 while IFS= read -r fenc || [[ -n "$fenc" ]]; do
     # Remove .enc from filename
-    f="${fenc//.enc/}"
+    f="${fenc%.enc.env}.env"
 
     tmpfile=$(mktemp --suffix=.env)
     tmpfiles+=("$tmpfile")
