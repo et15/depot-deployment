@@ -1,6 +1,8 @@
-.env
-*.env
-!*.enc.env
+#.env
+#*.env
+#!*.enc.env
+secrets/
+!secrets/*.enc
 
 backups/
 data/

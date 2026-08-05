@@ -1,6 +1,6 @@
 creation_rules:
-  - path_regex: \.env$
+  - path_regex: secrets/.*\.enc$
     age: age1...
-    encrypted_regex: '(?i)(PASS|SECRET)'
-  - path_regex: \.enc\.env$
-    age: age1...
+#  - path_regex: \.enc\.env$
+#    age: age1...
+#    encrypted_regex: '(?i)(PASS|SECRET)'
