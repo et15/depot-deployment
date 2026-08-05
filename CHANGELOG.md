@@ -1,3 +1,9 @@
+## v0.1.0 (2026-08-06)
+
+### Feat
+
+- switch secrets to a single encrypted secrets/*.enc scheme
+
 ## v0.0.2 (2026-08-05)
 
 ### Fix
