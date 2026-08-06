@@ -3,7 +3,7 @@ repos:
   hooks:
   - id: check-secrets
     name: Validate secrets/*.enc and block plaintext secrets in .env files
-    entry: scripts/pre-commit-checks.sh
+    entry: scripts/hooks/pre-commit-checks.sh
     language: system
     pass_filenames: false
     stages:

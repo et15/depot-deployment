@@ -1,5 +1,5 @@
 #!/bin/bash
-# .githooks/pre-commit
+# scripts/hooks/pre-commit-checks.sh
 set -euo pipefail
 
 fail=0
@@ -30,6 +30,8 @@ while IFS= read -r f; do
 done < <(git diff --cached --name-only --diff-filter=ACM -- 'secrets/*.enc')
 
 # --- Hook 2: plain .env(.*) files must not contain obvious secrets ---
+# *_FILE keys are exempt: by convention their value is a path to a decrypted
+# secrets/*.enc file (see README.md), not the secret itself.
 pattern='(?i)(PASS|SECRET|PASSPHRASE)[A-Z0-9_]*[[:space:]]*='
 
 while IFS= read -r f; do
@@ -37,7 +39,7 @@ while IFS= read -r f; do
 
     matches=$(grep -nP "$pattern" "$f" 2>/dev/null || true)
     if [[ -n "$matches" ]]; then
-        real=$(echo "$matches" | grep -P '=\s*\S' || true)
+        real=$(echo "$matches" | grep -P '=\s*\S' | grep -viP '_FILE\s*=' || true)
         if [[ -n "$real" ]]; then
             echo "ERROR: $f contains a key matching PASS/SECRET/PASSPHRASE with a non-empty value:" >&2
             echo "$real" >&2
