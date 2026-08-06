@@ -104,7 +104,8 @@ Requires `sops`, `age`, and `docker compose` on `PATH`, plus a readable
 ## Development tooling
 
 Commit hooks are managed by the `pre-commit` framework (installed into
-`.git/hooks`, not a custom `core.hooksPath`):
+`.git/hooks`, not a custom `core.hooksPath`). The `check-secrets` hook also
+requires `jq` on `PATH`:
 
 ```
 uv tool install pre-commit
