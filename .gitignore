@@ -1,7 +1,7 @@
 #.env
 #*.env
 #!*.enc.env
-secrets/
+secrets/*
 !secrets/*.enc
 
 backups/
