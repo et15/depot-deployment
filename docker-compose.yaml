@@ -1,5 +1,14 @@
 services:
 # some services
+# Example showing the secrets convention (see README.md / .env):
+#  app:
+#    image: example/app:latest
+#    env_file: .env
+#    volumes:
+#      - ${SECRETS_DIR}:/run/secrets:ro
+#    networks:
+#      - default
+#      - proxy
 
 volumes:
 # volumes
