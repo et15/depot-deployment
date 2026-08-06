@@ -11,37 +11,27 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
-envfiles="$PROJECTDIR/envfiles"
-# Check if envfiles file exists
-if [[ ! -f "$envfiles" ]]; then
-    echo "Error: $envfiles not found" >&2
-    exit 1
-fi
-
+SECRETS_DIR=$(mktemp -d)
 cleanup() {
-    rm -f "${tmpfiles[@]}" "${symlinks[@]}" 2>/dev/null
+    rm -rf "$SECRETS_DIR"
 }
 trap cleanup EXIT TERM INT
 
-declare -a tmpfiles=()
-declare -a symlinks=()
+# Decrypt every secrets/*.enc into $SECRETS_DIR/<name> (same name, .enc dropped).
+# $SECRETS_DIR is bind-mounted into containers at a common path (e.g. /run/secrets)
+# and referenced from .env via *_FILE keys, e.g. DB_PASSWORD_FILE=/run/secrets/db_password
+shopt -s nullglob
+count=0
+for fenc in "$PROJECTDIR"/secrets/*.enc; do
+    f="$(basename "${fenc%.enc}")"
 
-# Read envfiles from file (one per line)
-while IFS= read -r fenc || [[ -n "$fenc" ]]; do
-    # Remove .enc from filename
-    f="${fenc%.enc.env}.env"
+    echo "Decrypting: secrets/$(basename "$fenc") -> \$SECRETS_DIR/$f" >&2
+    sops --input-type binary --output-type binary -d "$fenc" > "$SECRETS_DIR/$f"
+    chmod 400 "$SECRETS_DIR/$f"
+    count=$((count + 1))
+done
 
-    tmpfile=$(mktemp --suffix=.env)
-    tmpfiles+=("$tmpfile")
+echo "Decrypted $count secret(s) into $SECRETS_DIR" >&2
 
-    symlink="$PROJECTDIR/$f"
-    symlinks+=("$symlink")
-
-    echo "Decrypting: $fenc -> $f" >&2
-    sops --input-type dotenv --output-type dotenv -d "$PROJECTDIR/$fenc" > "$tmpfile"
-    ln -s "$tmpfile" "$symlink"
-done < "$envfiles"
-
-echo "Decrypted ${#symlinks[@]} env file(s)" >&2
-
+export SECRETS_DIR
 docker compose -f "$PROJECTDIR/docker-compose.yaml" "$@"
