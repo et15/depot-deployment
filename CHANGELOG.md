@@ -1,3 +1,10 @@
+## v0.2.1 (2026-08-06)
+
+### Fix
+
+- respect SOPS_AGE_KEY_FILE override, open secret perms for non-root containers
+- allow secrets/*.enc to actually be committed
+
 ## v0.2.0 (2026-08-06)
 
 ### Feat
