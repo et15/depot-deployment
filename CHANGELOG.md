@@ -1,3 +1,15 @@
+## v0.2.0 (2026-08-06)
+
+### Feat
+
+- add bin/secret-edit.sh to create/edit secrets via sops edit
+- document the secrets bind-mount convention with an example .env
+
+### Fix
+
+- decrypt secrets/*.enc into a bind-mountable dir, not the old envfiles list
+- point pre-commit hook at its new path, exempt *_FILE keys from secret scan
+
 ## v0.1.0 (2026-08-06)
 
 ### Feat
